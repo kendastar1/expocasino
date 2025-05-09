@@ -1,0 +1,344 @@
+:root {
+    --primary-color: #d4af37;
+    --secondary-color: #c11f2b;
+    --dark-color: #0a0a0a;
+    --light-color: #f8f8f8;
+    --green-chip: #2e8b57;
+    --blue-chip: #1e90ff;
+    --red-chip: #dc143c;
+    --table-felt: #046307;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #000;
+    color: var(--light-color);
+    height: 100vh;
+    overflow: hidden;
+    background: url('../imagenes/casino-bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.casino-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: rgba(10, 10, 10, 0.9);
+    border-bottom: 3px solid var(--primary-color);
+    position: relative;
+    z-index: 10;
+}
+
+.header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+    letter-spacing: 3px;
+}
+
+.header h1 span {
+    color: var(--secondary-color);
+}
+
+.casino-lights {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        rgba(255,0,0,0.1) 0%, 
+        rgba(255,255,0,0.1) 20%, 
+        rgba(0,255,0,0.1) 40%, 
+        rgba(0,255,255,0.1) 60%, 
+        rgba(0,0,255,0.1) 80%, 
+        rgba(255,0,255,0.1) 100%);
+    animation: lightEffect 8s linear infinite;
+    z-index: -1;
+}
+
+@keyframes lightEffect {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+.chips-container {
+    display: flex;
+    gap: 10px;
+}
+
+.chip {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.chip::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+}
+
+.chip.red {
+    background-color: var(--red-chip);
+}
+
+.chip.blue {
+    background-color: var(--blue-chip);
+}
+
+.chip.green {
+    background-color: var(--green-chip);
+}
+
+.game-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem;
+    background-color: rgba(4, 99, 7, 0.85);
+    background-image: linear-gradient(
+        to bottom,
+        rgba(4, 99, 7, 0.9),
+        rgba(2, 60, 4, 0.9)
+    );
+    margin: 1rem;
+    border-radius: 10px;
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.dealer-area, .player-area {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.dealer-area h2, .player-area h2 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.cards-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    min-height: 180px;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 120px;
+    height: 180px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px) scale(1.05);
+}
+
+.card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+.card-back {
+    width: 120px;
+    height: 180px;
+    background: linear-gradient(135deg, var(--secondary-color) 0%, #8b0000 100%);
+    border-radius: 8px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+}
+
+.message-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 1.5rem 2rem;
+    border-radius: 10px;
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    z-index: 100;
+    text-align: center;
+    max-width: 80%;
+    animation: pulse 2s infinite;
+    display: none;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
+    100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+}
+
+.message-content {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.message-content p {
+    margin-bottom: 0.5rem;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 1rem;
+    background-color: rgba(10, 10, 10, 0.9);
+    border-top: 2px solid var(--primary-color);
+}
+
+.btn {
+    padding: 0.8rem 1.8rem;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 150px;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-hit {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-stand {
+    background-color: var(--primary-color);
+    color: var(--dark-color);
+}
+
+.btn-reset {
+    background-color: #2e8b57;
+    color: white;
+    display: none;
+}
+
+.score-board {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 0.5rem;
+    background-color: rgba(10, 10, 10, 0.7);
+}
+
+.score-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+.score-box span:first-child {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.score-box span:last-child {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+/* Efectos especiales */
+.win-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(212,175,55,0.3) 0%, rgba(212,175,55,0) 70%);
+    pointer-events: none;
+    z-index: 50;
+    animation: fadeInOut 2s forwards;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .card, .card-back {
+        width: 80px;
+        height: 120px;
+    }
+    
+    .cards-container {
+        min-height: 140px;
+    }
+}
