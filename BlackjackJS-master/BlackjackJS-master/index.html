@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>Blackjack VIP | Diseño Mejorado</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;700&display=swap">
+    <style>
+        :root {
+            --primary-color: #d4af37;
+            --secondary-color: #c11f2b;
+            --dark-color: #0a0a0a;
+            --light-color: #f8f8f8;
+            --green-chip: #2e8b57;
+            --blue-chip: #1e90ff;
+            --red-chip: #dc143c;
+            --table-felt: #046307;
+            --player-colors: #FF5252, #4CAF50, #2196F3, #FFC107;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #000;
+            color: var(--light-color);
+            height: 100vh;
+            overflow: hidden;
+            background: url('https://images.unsplash.com/photo-1596838132731-3301c3fd4317') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .casino-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Pantalla de inicio */
+        .start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .start-content {
+            background-color: rgba(10, 10, 10, 0.95);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 3px solid var(--primary-color);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .start-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+        }
+
+        .player-select {
+            margin: 2rem 0;
+        }
+
+        .player-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .player-option {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--dark-color);
+            border: 3px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .player-option:hover {
+            transform: scale(1.1);
+            background-color: rgba(212, 175, 55, 0.2);
+        }
+
+        .player-option.selected {
+            background-color: var(--primary-color);
+            color: var(--dark-color);
+        }
+
+        .start-btn {
+            padding: 0.8rem 2rem;
+            background-color: var(--primary-color);
+            color: var(--dark-color);
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            text-transform: uppercase;
+        }
+
+        .start-btn:hover {
+            background-color: #e6c04d;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: rgba(10, 10, 10, 0.9);
+            border-bottom: 3px solid var(--primary-color);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+            letter-spacing: 3px;
+        }
+
+        .header h1 span {
+            color: var(--secondary-color);
+        }
+
+        .casino-lights {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                rgba(255,0,0,0.1) 0%, 
+                rgba(255,255,0,0.1) 20%, 
+                rgba(0,255,0,0.1) 40%, 
+                rgba(0,255,255,0.1) 60%, 
+                rgba(0,0,255,0.1) 80%, 
+                rgba(255,0,255,0.1) 100%);
+            animation: lightEffect 8s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes lightEffect {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .chips-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chip {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .chip::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+        }
+
+        .chip.red {
+            background-color: var(--red-chip);
+        }
+
+        .chip.blue {
+            background-color: var(--blue-chip);
+        }
+
+        .chip.green {
+            background-color: var(--green-chip);
+        }
+
+        .game-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            background-color: rgba(4, 99, 7, 0.85);
+            background-image: linear-gradient(
+                to bottom,
+                rgba(4, 99, 7, 0.9),
+                rgba(2, 60, 4, 0.9)
+            );
+            margin: 1rem;
+            border-radius: 10px;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: auto;
+        }
+
+        /* Estilo personalizado para la barra de desplazamiento */
+        .game-area::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .game-area::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid var(--primary-color);
+        }
+
+        .game-area::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .game-area::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #e6c04d, #d11f2b);
+        }
+
+        /* Área del crupier (arriba) */
+        .dealer-area {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .dealer-area h2 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        /* Área de jugadores (centro) */
+        .players-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px; /* Espacio para la barra de desplazamiento */
+        }
+
+        /* Estilo para la barra de desplazamiento de los jugadores */
+        .players-container::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        .players-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid var(--primary-color);
+            margin: 0 10px;
+        }
+
+        .players-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .players-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(90deg, #e6c04d, #d11f2b);
+        }
+
+        .player-section {
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 10px;
+            border: 2px solid;
+            position: relative;
+        }
+
+        .player-section:nth-child(1) { border-color: #FF5252; }
+        .player-section:nth-child(2) { border-color: #4CAF50; }
+        .player-section:nth-child(3) { border-color: #2196F3; }
+        .player-section:nth-child(4) { border-color: #FFC107; }
+
+        .player-name {
+            color: white;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+        }
+
+        .player-section:nth-child(1) .player-name { color: #FF5252; }
+        .player-section:nth-child(2) .player-name { color: #4CAF50; }
+        .player-section:nth-child(3) .player-name { color: #2196F3; }
+        .player-section:nth-child(4) .player-name { color: #FFC107; }
+
+        /* Barra de probabilidad mejorada */
+        .probability-container {
+            margin: 15px 0;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border: 1px solid var(--primary-color);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .probability-title {
+            font-size: 0.8rem;
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .probability-bar {
+            height: 20px;
+            background: linear-gradient(to right, 
+                #ff0000 0%, 
+                #ff5e00 10%, 
+                #ffbb00 20%, 
+                #d4ff00 30%, 
+                #5eff00 40%, 
+                #00ff2a 50%, 
+                #00ff88 60%, 
+                #00f7ff 70%, 
+                #0091ff 80%, 
+                #0040ff 90%, 
+                #3c00ff 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .probability-marker {
+            position: absolute;
+            width: 2px;
+            height: 30px;
+            background-color: white;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .probability-fill {
+            height: 100%;
+            width: 50%;
+            background-color: rgba(0, 0, 0, 0.7);
+            transition: width 0.5s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .probability-value {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-shadow: 1px 1px 2px black;
+            z-index: 3;
+        }
+
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            min-height: 150px;
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            width: 100px;
+            height: 150px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transition: transform 0.3s ease;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .card.dragging {
+            opacity: 0.7;
+            transform: scale(1.1);
+            cursor: grabbing;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 6px;
+            pointer-events: none;
+        }
+
+        .card-back {
+            width: 100px;
+            height: 150px;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #8b0000 100%);
+            border-radius: 8px;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Mensajes de casino mejorados */
+        .casino-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.9), rgba(193, 31, 43, 0.9));
+            padding: 2rem 3rem;
+            border-radius: 10px;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.7);
+            z-index: 200;
+            text-align: center;
+            max-width: 80%;
+            animation: casinoMessage 1.5s ease-out;
+            display: none;
+            color: white;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        @keyframes casinoMessage {
+            0% { 
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .casino-message.win {
+            background: linear-gradient(135deg, rgba(46, 139, 87, 0.9), rgba(30, 144, 255, 0.9));
+        }
+
+        .casino-message.lose {
+            background: linear-gradient(135deg, rgba(193, 31, 43, 0.9), rgba(139, 0, 0, 0.9));
+        }
+
+        .casino-message.tie {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.9), rgba(169, 169, 169, 0.9));
+        }
+
+        .casino-message.dealer-win {
+            background: linear-gradient(135deg, rgba(193, 31, 43, 0.9), rgba(139, 0, 0, 0.9));
+        }
+
+        .message-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            z-index: 100;
+            text-align: center;
+            max-width: 80%;
+            animation: pulse 2s infinite;
+            display: none;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
+            100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+        }
+
+        .message-content {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .message-content p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Controles y baraja (abajo) */
+        .bottom-section {
+            display: flex;
+            flex-direction: column;
+            background-color: rgba(10, 10, 10, 0.9);
+            border-top: 2px solid var(--primary-color);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 1.8rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-hit {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-stand {
+            background-color: var(--primary-color);
+            color: var(--dark-color);
+        }
+
+        .btn-reset {
+            background-color: #2e8b57;
+            color: white;
+        }
+
+        .btn-change-players {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .btn-remove-card {
+            background-color: #FF5722;
+            color: white;
+        }
+
+        .btn-finish {
+            background-color: #9C27B0;
+            color: white;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 0.5rem;
+            background-color: rgba(10, 10, 10, 0.7);
+            flex-wrap: wrap;
+        }
+
+        .score-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 1.1rem;
+            min-width: 120px;
+        }
+
+        .score-box span:first-child {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .score-box span:last-child {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Baraja de cartas */
+        .deck-container {
+            width: 95%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid var(--primary-color);
+            z-index: 100;
+            max-height: 25vh;
+            overflow-y: auto;
+        }
+
+        /* Estilo para la barra de desplazamiento del mazo */
+        .deck-container::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .deck-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid var(--primary-color);
+        }
+
+        .deck-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .deck-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #e6c04d, #d11f2b);
+        }
+
+        .deck-title {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Pestañas de palos */
+        .suit-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .suit-tab {
+            padding: 8px 15px;
+            background-color: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--primary-color);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .suit-tab:hover {
+            background-color: rgba(212, 175, 55, 0.2);
+        }
+
+        .suit-tab.active {
+            background-color: var(--primary-color);
+            color: var(--dark-color);
+        }
+
+        .suit-tab.spades { color: white; }
+        .suit-tab.hearts { color: #ff5252; }
+        .suit-tab.diamonds { color: #ff5252; }
+        .suit-tab.clubs { color: white; }
+
+        .deck-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .deck-card {
+            width: 60px;
+            height: 90px;
+            border-radius: 5px;
+            cursor: grab;
+            transition: all 0.2s ease;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .deck-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .deck-card.dragging {
+            opacity: 0.7;
+            transform: scale(1.1);
+            cursor: grabbing;
+        }
+
+        /* Áreas de soltar */
+        .drop-zone {
+            min-height: 160px;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.highlight {
+            background-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Efectos especiales */
+        .win-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(212,175,55,0.3) 0%, rgba(212,175,55,0) 70%);
+            pointer-events: none;
+            z-index: 50;
+            animation: fadeInOut 2s forwards;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .card, .card-back {
+                width: 70px;
+                height: 105px;
+            }
+            
+            .cards-container {
+                min-height: 120px;
+            }
+
+            .player-section {
+                min-width: 100%;
+            }
+            
+            .deck-container {
+                max-height: 20vh;
+            }
+            
+            .deck-cards {
+                max-width: 100%;
+            }
+            
+            .deck-card {
+                width: 50px;
+                height: 75px;
+            }
+            
+            .suit-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .suit-tab {
+                padding: 5px 10px;
+                font-size: 0.9rem;
+            }
+
+            .casino-message {
+                font-size: 1.5rem;
+                padding: 1.5rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de inicio -->
+    <div class="start-screen" id="start-screen">
+        <div class="start-content">
+            <h1 class="start-title">BLACKJACK <span style="color: var(--secondary-color);">VIP</span></h1>
+            <p style="color: white; margin-bottom: 1.5rem;">Selecciona el número de jugadores</p>
+            
+            <div class="player-select">
+                <div class="player-options">
+                    <div class="player-option" data-players="1">1</div>
+                    <div class="player-option" data-players="2">2</div>
+                    <div class="player-option" data-players="3">3</div>
+                    <div class="player-option selected" data-players="4">4</div>
+                </div>
+            </div>
+            
+            <button class="start-btn" id="start-btn">Iniciar Juego</button>
+        </div>
+    </div>
+
+    <!-- Mensaje de casino -->
+    <div class="casino-message" id="casino-message"></div>
+
+    <div class="casino-container" id="game-container" style="display: none;">
+        <div class="header">
+            <div class="casino-lights"></div>
+            <h1>BLACKJACK <span>VIP</span></h1>
+            <div class="chips-container">
+                <div class="chip red">500</div>
+                <div class="chip blue">200</div>
+                <div class="chip green">100</div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <!-- Crupier (arriba) -->
+            <div class="dealer-area">
+                <h2>CRUPIER</h2>
+                <div class="cards-container drop-zone" id="dealer-cards"></div>
+            </div>
+
+            <!-- Jugadores (centro) -->
+            <div class="players-container" id="players-container">
+                <!-- Jugadores se agregarán dinámicamente aquí -->
+            </div>
+
+            <div class="message-box" id="message-box">
+                <div class="message-content" id="message-content">
+                    <p>Bienvenido al Blackjack VIP!</p>
+                    <p>Arrastra cartas desde la baraja</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles y baraja (abajo) -->
+        <div class="bottom-section">
+            <div class="controls">
+                <button class="btn btn-reset" id="reset-btn">Nuevo Juego</button>
+                <button class="btn btn-change-players" id="change-players-btn">Cambiar Jugadores</button>
+                <button class="btn btn-finish" id="finish-btn">Finalizar Partida</button>
+                <button class="btn btn-remove-card" id="remove-card-btn">Quitar Carta</button>
+            </div>
+
+            <div class="score-board" id="score-board">
+                <!-- Puntuaciones se agregarán dinámicamente aquí -->
+            </div>
+
+            <!-- Baraja de cartas -->
+            <div class="deck-container" id="deck-container">
+                <div class="deck-title">BARAJAR CARTAS</div>
+                
+                <!-- Pestañas de palos -->
+                <div class="suit-tabs">
+                    <div class="suit-tab spades active" data-suit="S">♠ Picas</div>
+                    <div class="suit-tab hearts" data-suit="H">♥ Corazones</div>
+                    <div class="suit-tab diamonds" data-suit="D">♦ Diamantes</div>
+                    <div class="suit-tab clubs" data-suit="C">♣ Tréboles</div>
+                </div>
+                
+                <div class="deck-cards" id="deck-cards">
+                    <!-- Cartas se agregarán dinámicamente aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables del juego
+        let players = [];
+        let dealerHand = [];
+        let numberOfPlayers = 4;
+        let cardImagesLoaded = 0;
+        const totalCardImages = 52 * 4; // 52 cartas por 4 palos
+        let draggedCard = null;
+        let currentTarget = null;
+        let currentSuit = 'S'; // Picas por defecto
+        let selectedCard = null;
+        let gameFinished = false;
+
+        // Clase para representar un jugador
+        class Player {
+            constructor(id, name, color) {
+                this.id = id;
+                this.name = name;
+                this.hand = [];
+                this.score = 0;
+                this.probability = 50;
+                this.color = color;
+            }
+        }
+
+        // Inicializar la pantalla de inicio
+        function initStartScreen() {
+            const playerOptions = document.querySelectorAll('.player-option');
+            playerOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    playerOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    numberOfPlayers = parseInt(this.getAttribute('data-players'));
+                });
+            });
+
+            document.getElementById('start-btn').addEventListener('click', function() {
+                document.getElementById('start-screen').style.display = 'none';
+                document.getElementById('game-container').style.display = 'flex';
+                initGame();
+            });
+        }
+
+        // Inicializar el juego
+        function initGame() {
+            gameFinished = false;
+            // Crear jugadores
+            createPlayers();
+            
+            // Inicializar manos vacías
+            dealerHand = [];
+            players.forEach(player => player.hand = []);
+            
+            // Crear la baraja visual
+            createDeckView();
+            
+            // Configurar eventos de arrastre
+            setupDragAndDrop();
+            
+            // Configurar botones
+            setupButtons();
+            
+            // Configurar pestañas de palos
+            setupSuitTabs();
+            
+            // Configurar eventos de clic en cartas
+            setupCardSelection();
+            
+            // Actualizar la interfaz
+            updateUI();
+            
+            // Mostrar mensaje de bienvenida
+            showMessage(`Bienvenido al Blackjack VIP!<br>Arrastra cartas desde la baraja`);
+        }
+
+        // Configurar selección de cartas
+        function setupCardSelection() {
+            document.addEventListener('click', function(e) {
+                // Si se hace clic fuera de una carta, deseleccionar
+                if (!e.target.closest('.card')) {
+                    if (selectedCard) {
+                        selectedCard.style.border = 'none';
+                        selectedCard.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
+                        selectedCard = null;
+                    }
+                    return;
+                }
+
+                const clickedCard = e.target.closest('.card');
+                
+                // Si ya hay una carta seleccionada, deseleccionarla
+                if (selectedCard && selectedCard !== clickedCard) {
+                    selectedCard.style.border = 'none';
+                    selectedCard.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
+                }
+                
+                // Seleccionar la nueva carta
+                selectedCard = clickedCard;
+                selectedCard.style.border = '3px solid var(--primary-color)';
+                selectedCard.style.boxShadow = '0 0 15px rgba(212, 175, 55, 0.8)';
+            });
+        }
+
+        // Crear jugadores
+        function createPlayers() {
+            players = [];
+            const playerColors = ['#FF5252', '#4CAF50', '#2196F3', '#FFC107'];
+            const playerNames = ['Jugador 1', 'Jugador 2', 'Jugador 3', 'Jugador 4'];
+            
+            for (let i = 0; i < numberOfPlayers; i++) {
+                players.push(new Player(i, playerNames[i], playerColors[i]));
+            }
+            
+            // Renderizar jugadores en la interfaz
+            renderPlayers();
+            renderScoreBoard();
+        }
+
+        // Renderizar jugadores en la interfaz
+        function renderPlayers() {
+            const container = document.getElementById('players-container');
+            container.innerHTML = '';
+            
+            players.forEach(player => {
+                const playerSection = document.createElement('div');
+                playerSection.className = 'player-section';
+                playerSection.style.borderColor = player.color;
+                playerSection.id = `player-${player.id}`;
+                
+                playerSection.innerHTML = `
+                    <div class="player-name" style="color: ${player.color}">${player.name}</div>
+                    <div class="cards-container drop-zone" id="player-cards-${player.id}"></div>
+                    <div class="probability-container">
+                        <div class="probability-title">Probabilidad de Ganar</div>
+                        <div class="probability-bar">
+                            <div class="probability-marker"></div>
+                            <div class="probability-fill" id="probability-${player.id}" style="width: ${100 - player.probability}%"></div>
+                            <div class="probability-value" id="probability-text-${player.id}">${player.probability}%</div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(playerSection);
+            });
+        }
+
+        // Renderizar el marcador de puntuaciones
+        function renderScoreBoard() {
+            const scoreBoard = document.getElementById('score-board');
+            scoreBoard.innerHTML = '';
+            
+            // Agregar puntuación del crupier
+            const dealerScoreBox = document.createElement('div');
+            dealerScoreBox.className = 'score-box';
+            dealerScoreBox.innerHTML = `
+                <span>Crupier:</span>
+                <span id="dealer-score">0</span>
+            `;
+            scoreBoard.appendChild(dealerScoreBox);
+            
+            // Agregar puntuaciones de los jugadores
+            players.forEach(player => {
+                const playerScoreBox = document.createElement('div');
+                playerScoreBox.className = 'score-box';
+                playerScoreBox.innerHTML = `
+                    <span style="color: ${player.color}">${player.name}:</span>
+                    <span id="player-score-${player.id}">0</span>
+                `;
+                scoreBoard.appendChild(playerScoreBox);
+            });
+        }
+
+        // Crear la baraja visual para el palo seleccionado
+        function createDeckView() {
+            const values = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
+            const deckContainer = document.getElementById('deck-cards');
+            deckContainer.innerHTML = '';
+            
+            // Mostrar todas las cartas del palo seleccionado
+            values.forEach(value => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'deck-card';
+                cardElement.draggable = true;
+                cardElement.dataset.value = value;
+                cardElement.dataset.suit = currentSuit;
+                cardElement.style.backgroundImage = `url('imagenes/cartas/${value}${currentSuit}.svg')`;
+                
+                deckContainer.appendChild(cardElement);
+            });
+        }
+
+        // Configurar pestañas de palos
+        function setupSuitTabs() {
+            document.querySelectorAll('.suit-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Desactivar todas las pestañas
+                    document.querySelectorAll('.suit-tab').forEach(t => t.classList.remove('active'));
+                    // Activar la pestaña clickeada
+                    this.classList.add('active');
+                    // Actualizar el palo actual
+                    currentSuit = this.dataset.suit;
+                    // Recrear la vista de la baraja
+                    createDeckView();
+                    // Reconfigurar eventos de arrastre
+                    setupDragAndDrop();
+                });
+            });
+        }
+
+        // Configurar eventos de arrastre
+        function setupDragAndDrop() {
+            // Eventos para las cartas de la baraja
+            document.querySelectorAll('.deck-card').forEach(card => {
+                card.addEventListener('dragstart', dragStart);
+            });
+            
+            // Eventos para las zonas de soltar
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.addEventListener('dragover', dragOver);
+                zone.addEventListener('dragenter', dragEnter);
+                zone.addEventListener('dragleave', dragLeave);
+                zone.addEventListener('drop', drop);
+            });
+        }
+
+        // Configurar botones
+        function setupButtons() {
+            document.getElementById('reset-btn').addEventListener('click', resetGame);
+            document.getElementById('change-players-btn').addEventListener('click', showPlayerSelection);
+            document.getElementById('finish-btn').addEventListener('click', finishGame);
+            document.getElementById('remove-card-btn').addEventListener('click', removeSelectedCard);
+        }
+
+        // Finalizar la partida y mostrar resultados
+        function finishGame() {
+            if (gameFinished) return;
+            
+            gameFinished = true;
+            
+            // Verificar que todas las manos tengan cartas
+            let allHandsHaveCards = dealerHand.length > 0;
+            players.forEach(player => {
+                if (player.hand.length === 0) {
+                    allHandsHaveCards = false;
+                }
+            });
+            
+            if (!allHandsHaveCards) {
+                showMessage('Debes repartir cartas a todos los jugadores y al crupier antes de finalizar');
+                gameFinished = false;
+                return;
+            }
+            
+            // Mostrar resultados
+            showResults();
+        }
+
+        // Mostrar selección de jugadores
+        function showPlayerSelection() {
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'flex';
+            
+            // Seleccionar la opción actual
+            document.querySelectorAll('.player-option').forEach(option => {
+                if (parseInt(option.getAttribute('data-players')) === numberOfPlayers) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+        }
+
+        // Manejar inicio de arrastre
+        function dragStart(e) {
+            if (gameFinished) {
+                e.preventDefault();
+                return;
+            }
+            
+            draggedCard = {
+                value: this.dataset.value,
+                suit: this.dataset.suit,
+                element: this
+            };
+            this.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', ''); // Necesario para Firefox
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        // Manejar arrastre sobre zona de soltar
+        function dragOver(e) {
+            if (gameFinished) {
+                e.preventDefault();
+                return false;
+            }
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        // Manejar entrada a zona de soltar
+        function dragEnter(e) {
+            if (gameFinished) {
+                e.preventDefault();
+                return;
+            }
+            e.preventDefault();
+            this.classList.add('highlight');
+            currentTarget = this.id;
+        }
+
+        // Manejar salida de zona de soltar
+        function dragLeave() {
+            this.classList.remove('highlight');
+        }
+
+        // Manejar soltar carta
+        function drop(e) {
+            if (gameFinished) {
+                e.preventDefault();
+                return;
+            }
+            
+            e.preventDefault();
+            this.classList.remove('highlight');
+            
+            if (!draggedCard) return;
+            
+            // Determinar el objetivo (crupier o jugador)
+            if (this.id === 'dealer-cards') {
+                dealerHand.push({ value: draggedCard.value, suit: draggedCard.suit });
+            } else {
+                const playerId = parseInt(this.id.replace('player-cards-', ''));
+                if (playerId >= 0 && playerId < players.length) {
+                    players[playerId].hand.push({ value: draggedCard.value, suit: draggedCard.suit });
+                }
+            }
+            
+            // Actualizar la interfaz
+            updateUI();
+            
+            // Restablecer la carta arrastrada
+            draggedCard.element.classList.remove('dragging');
+            draggedCard = null;
+            currentTarget = null;
+        }
+
+        // Quitar la carta seleccionada
+        function removeSelectedCard() {
+            if (gameFinished) {
+                showMessage('La partida ha terminado. Inicia un nuevo juego.');
+                return;
+            }
+            
+            if (!selectedCard) {
+                showMessage('Selecciona una carta primero (haz clic sobre ella)');
+                return;
+            }
+            
+            // Encontrar de qué mano proviene la carta seleccionada
+            const container = selectedCard.closest('.cards-container');
+            if (!container) return;
+            
+            const containerId = container.id;
+            
+            if (containerId === 'dealer-cards') {
+                // Buscar la carta en la mano del crupier
+                const cardIndex = findCardIndexInHand(dealerHand, selectedCard);
+                if (cardIndex !== -1) {
+                    dealerHand.splice(cardIndex, 1);
+                }
+            } else {
+                // Buscar la carta en la mano del jugador correspondiente
+                const playerId = parseInt(containerId.replace('player-cards-', ''));
+                if (playerId >= 0 && playerId < players.length) {
+                    const cardIndex = findCardIndexInHand(players[playerId].hand, selectedCard);
+                    if (cardIndex !== -1) {
+                        players[playerId].hand.splice(cardIndex, 1);
+                    }
+                }
+            }
+            
+            // Deseleccionar la carta
+            if (selectedCard) {
+                selectedCard.style.border = 'none';
+                selectedCard.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
+                selectedCard = null;
+            }
+            
+            // Actualizar la interfaz
+            updateUI();
+        }
+
+        // Encontrar el índice de una carta en una mano
+        function findCardIndexInHand(hand, cardElement) {
+            const img = cardElement.querySelector('img');
+            if (!img) return -1;
+            
+            const srcParts = img.src.split('/');
+            const filename = srcParts[srcParts.length - 1];
+            const [value, suitWithExt] = filename.split('.')[0].split(/(?=[A-Za-z])/);
+            const suit = suitWithExt.substring(0, 1);
+            
+            for (let i = 0; i < hand.length; i++) {
+                if (hand[i].value === value && hand[i].suit === suit) {
+                    return i;
+                }
+            }
+            
+            return -1;
+        }
+
+        // Reiniciar el juego
+        function resetGame() {
+            initGame();
+        }
+
+        // Calcular la puntuación de una mano
+        function calculateScore(hand) {
+            let score = 0;
+            let aces = 0;
+            
+            for (let card of hand) {
+                if (card) {
+                    const value = parseInt(card.value);
+                    
+                    if (value === 1) { // As
+                        aces++;
+                        score += 11;
+                    } else if (value >= 10) { // Figuras (10, J, Q, K)
+                        score += 10;
+                    } else {
+                        score += value;
+                    }
+                }
+            }
+            
+            // Ajustar el valor de los ases si nos pasamos de 21
+            while (score > 21 && aces > 0) {
+                score -= 10;
+                aces--;
+            }
+            
+            return score;
+        }
+
+        // Actualizar la probabilidad de ganar
+        function updateProbability(player) {
+            const dealerScore = calculateScore(dealerHand);
+            const playerScore = calculateScore(player.hand);
+            
+            // Esta es una simulación simple - en un juego real necesitarías un algoritmo más complejo
+            let probability;
+            
+            if (playerScore > 21) {
+                probability = 0; // Ya se pasó
+            } else if (dealerHand.length === 0) {
+                // Si no hay cartas del crupier, probabilidad basada solo en la mano del jugador
+                probability = Math.max(5, Math.min(95, 50 + (playerScore - 12) * 5));
+            } else {
+                // Comparación con el crupier
+                if (dealerScore > 21) {
+                    probability = 95; // El crupier ya se pasó
+                } else if (playerScore > dealerScore) {
+                    probability = 80;
+                } else if (playerScore === dealerScore) {
+                    probability = 50;
+                } else {
+                    probability = 20;
+                }
+            }
+            
+            player.probability = probability;
+            
+            // Actualizar la barra de probabilidad
+            const probabilityFill = document.getElementById(`probability-${player.id}`);
+            const probabilityText = document.getElementById(`probability-text-${player.id}`);
+            
+            if (probabilityFill && probabilityText) {
+                probabilityFill.style.width = `${100 - player.probability}%`;
+                probabilityText.textContent = `${player.probability}%`;
+            }
+        }
+
+        // Determinar el resultado del juego
+        function determineResults() {
+            const dealerScore = calculateScore(dealerHand);
+            let results = [];
+            let winners = [];
+            let allPlayersBusted = true;
+            
+            // Verificar si todos los jugadores se pasaron de 21
+            for (let player of players) {
+                const playerScore = calculateScore(player.hand);
+                if (playerScore <= 21) {
+                    allPlayersBusted = false;
+                    break;
+                }
+            }
+            
+            // Si todos los jugadores se pasaron, el crupier gana automáticamente
+            if (allPlayersBusted) {
+                return {
+                    type: 'dealer-win',
+                    message: '¡El crupier gana! Todos los jugadores se pasaron de 21'
+                };
+            }
+            
+            // Si el crupier se pasó, todos los jugadores que no se pasaron ganan
+            if (dealerScore > 21) {
+                winners = players.filter(player => calculateScore(player.hand) <= 21);
+                
+                if (winners.length === 1) {
+                    return {
+                        type: 'win',
+                        message: `¡${winners[0].name} gana! El crupier se pasó de 21`,
+                        winner: winners[0]
+                    };
+                } else if (winners.length > 1) {
+                    return {
+                        type: 'win',
+                        message: `¡${winners.length} jugadores ganan! El crupier se pasó de 21`,
+                        winners: winners
+                    };
+                }
+            }
+            
+            // Comparar cada jugador con el crupier
+            for (let player of players) {
+                const playerScore = calculateScore(player.hand);
+                
+                if (playerScore > 21) {
+                    results.push({
+                        playerId: player.id,
+                        result: 'lose',
+                        playerScore: playerScore,
+                        dealerScore: dealerScore
+                    });
+                } else if (playerScore > dealerScore) {
+                    results.push({
+                        playerId: player.id,
+                        result: 'win',
+                        playerScore: playerScore,
+                        dealerScore: dealerScore
+                    });
+                    winners.push(player);
+                } else if (playerScore < dealerScore) {
+                    results.push({
+                        playerId: player.id,
+                        result: 'lose',
+                        playerScore: playerScore,
+                        dealerScore: dealerScore
+                    });
+                } else {
+                    results.push({
+                        playerId: player.id,
+                        result: 'tie',
+                        playerScore: playerScore,
+                        dealerScore: dealerScore
+                    });
+                }
+            }
+            
+            // Determinar el mensaje final
+            if (winners.length === 0) {
+                // Todos perdieron o empataron
+                const ties = results.filter(r => r.result === 'tie');
+                if (ties.length > 0) {
+                    if (ties.length === 1) {
+                        const player = players.find(p => p.id === ties[0].playerId);
+                        return {
+                            type: 'tie',
+                            message: `¡Empate! ${player.name} iguala al crupier`
+                        };
+                    } else {
+                        return {
+                            type: 'tie',
+                            message: '¡Empate múltiple! Varios jugadores igualan al crupier'
+                        };
+                    }
+                } else {
+                    return {
+                        type: 'dealer-win',
+                        message: '¡El crupier gana! Todos los jugadores pierden'
+                    };
+                }
+            } else if (winners.length === 1) {
+                return {
+                    type: 'win',
+                    message: `¡${winners[0].name} gana contra el crupier!`,
+                    winner: winners[0]
+                };
+            } else {
+                if (winners.length === players.length) {
+                    return {
+                        type: 'win',
+                        message: '¡Todos los jugadores ganan contra el crupier!'
+                    };
+                } else {
+                    return {
+                        type: 'win',
+                        message: `¡${winners.length} jugadores ganan contra el crupier!`
+                    };
+                }
+            }
+        }
+
+        // Mostrar resultados del juego
+        function showResults() {
+            const result = determineResults();
+            const messageBox = document.getElementById('casino-message');
+            
+            // Configurar el mensaje según el resultado
+            messageBox.innerHTML = result.message;
+            messageBox.className = `casino-message ${result.type}`;
+            messageBox.style.display = 'block';
+            
+            // Ocultar después de 3 segundos
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 3000);
+        }
+
+        // Actualizar la interfaz de usuario
+        function updateUI() {
+            updateDealerCards();
+            updatePlayersCards();
+            updateScores();
+            updateProbabilities();
+        }
+
+        // Actualizar las cartas del crupier
+        function updateDealerCards() {
+            const container = document.getElementById('dealer-cards');
+            container.innerHTML = '';
+            
+            for (let card of dealerHand) {
+                if (card) {
+                    const cardElement = createCardElement(card);
+                    container.appendChild(cardElement);
+                }
+            }
+            
+            // Actualizar puntuación
+            const dealerScore = calculateScore(dealerHand);
+            document.getElementById('dealer-score').textContent = dealerScore;
+        }
+
+        // Actualizar las cartas de los jugadores
+        function updatePlayersCards() {
+            players.forEach(player => {
+                const container = document.getElementById(`player-cards-${player.id}`);
+                container.innerHTML = '';
+                
+                for (let card of player.hand) {
+                    if (card) {
+                        const cardElement = createCardElement(card);
+                        container.appendChild(cardElement);
+                    }
+                }
+                
+                // Actualizar puntuación
+                player.score = calculateScore(player.hand);
+                document.getElementById(`player-score-${player.id}`).textContent = player.score;
+                
+                // Resaltar si se pasó de 21
+                if (player.score > 21) {
+                    container.parentElement.style.opacity = '0.6';
+                } else {
+                    container.parentElement.style.opacity = '1';
+                }
+            });
+        }
+
+        // Actualizar las probabilidades de todos los jugadores
+        function updateProbabilities() {
+            players.forEach(player => {
+                updateProbability(player);
+            });
+        }
+
+        // Crear elemento de carta con imagen SVG
+        function createCardElement(card) {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'card';
+            
+            const img = document.createElement('img');
+            img.src = `imagenes/cartas/${card.value}${card.suit}.svg`;
+            img.alt = `${card.value}${card.suit}`;
+            img.className = 'card-img';
+            
+            cardElement.appendChild(img);
+            return cardElement;
+        }
+
+        // Actualizar los marcadores de puntuación
+        function updateScores() {
+            // Puntuación del crupier
+            document.getElementById('dealer-score').textContent = calculateScore(dealerHand);
+            
+            // Puntuaciones de los jugadores
+            players.forEach(player => {
+                document.getElementById(`player-score-${player.id}`).textContent = player.score;
+            });
+        }
+
+        // Mostrar mensaje en el área de mensajes
+        function showMessage(msg, duration = 3000) {
+            const messageBox = document.getElementById('message-content');
+            messageBox.innerHTML = msg;
+            
+            // Mostrar animación
+            const box = document.getElementById('message-box');
+            box.style.display = 'block';
+            box.style.animation = 'none';
+            void box.offsetWidth; // Trigger reflow
+            box.style.animation = 'pulse 2s infinite';
+            
+            // Ocultar después de un tiempo si se especifica duración
+            if (duration) {
+                setTimeout(() => {
+                    box.style.display = 'none';
+                }, duration);
+            }
+        }
+
+        // Iniciar el juego cuando la página cargue
+        window.onload = function() {
+            initStartScreen();
+        };
+    </script>
+</body>
+</html>
